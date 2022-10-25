@@ -66,7 +66,7 @@ func main() {
 	yMax := flag.Float64("ymax", 1.2, "The maximum value on the y axis.")
 	cReal := flag.Float64("real", 0, "c's real component.")
 	cImaginary := flag.Float64("i", 0, "c's imaginary component.")
-  iterations := flag.Int("iterations", 100, "how many operations until considering a point bounded.")
+	iterations := flag.Int("iterations", 100, "how many operations until considering a point bounded.")
 
 	flag.Parse()
 
@@ -76,36 +76,36 @@ func main() {
 	rmX := newRangeMap(rangeBounds{0, float64(c.Width)}, rangeBounds{*xMin, *xMax})
 	rmY := newRangeMap(rangeBounds{0, float64(c.Height)}, rangeBounds{*yMin, *yMax})
 
-  // for every pixel
+	// for every pixel
 	for x := 0; x < c.Width; x++ {
 		for y := 0; y < c.Height; y++ {
 
-      // get the normalized x
+			// get the normalized x
 			a, ok := rmX(float64(x))
 			if !ok {
 				log.Fatal("Rangemap Error")
 			}
 
-      // get the normalized y
+			// get the normalized y
 			b, ok := rmY(float64(y))
 			if !ok {
 				log.Fatal("Rangemap Error")
 			}
 
-      // iteration counter 
+			// iteration counter
 			n := 0
 
 			for n < *iterations {
-        // Math stuff that I had to watch videos about and look up....
-        // This is where we apply the zeta function to each pixel recursively. 
-        // The function will either converse to a value or blow up to infinity.
+				// Math stuff that I had to watch videos about and look up....
+				// This is where we apply the zeta function to each pixel recursively.
+				// The function will either converse to a value or blow up to infinity.
 				aSquared := a*a - b*b
 				twoAB := 2 * a * b
 
 				a = aSquared + *cReal
 				b = twoAB + *cImaginary
 
-        // Looks like we're heading to infinity
+				// Looks like we're heading to infinity
 				if math.Abs(aSquared+twoAB) > 16 {
 					break
 				}
@@ -114,13 +114,13 @@ func main() {
 
 			c.Img.Set(x, y, blue_plt[n%len(blue_plt)])
 
-      // stayed bounded
+			// stayed bounded
 			if n == *iterations {
 				c.Img.Set(x, y, image.White)
 			}
 
-      // this calms down some of the color schemes. 
-      // Can be removed or tweaked based on your preference.
+			// this calms down some of the color schemes.
+			// Can be removed or tweaked based on your preference.
 			if n <= 16 {
 				c.Img.Set(x, y, image.White)
 			}

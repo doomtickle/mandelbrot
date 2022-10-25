@@ -25,4 +25,3 @@ func (c *Canvas) Save() {
 	f, _ := os.Create("image.png")
 	png.Encode(f, c.Img)
 }
-
