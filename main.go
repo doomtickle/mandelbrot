@@ -79,26 +79,22 @@ func main() {
 	// for every pixel
 	for x := 0; x < c.Width; x++ {
 		for y := 0; y < c.Height; y++ {
-
 			// get the normalized x
 			a, ok := rmX(float64(x))
 			if !ok {
 				log.Fatal("Rangemap Error")
 			}
-
 			// get the normalized y
 			b, ok := rmY(float64(y))
 			if !ok {
 				log.Fatal("Rangemap Error")
 			}
-
 			// iteration counter
 			n := 0
-
 			for n < *iterations {
 				// Math stuff that I had to watch videos about and look up....
 				// This is where we apply the zeta function to each pixel recursively.
-				// The function will either converse to a value or blow up to infinity.
+				// The function will either converge to a value or blow up to infinity.
 				aSquared := a*a - b*b
 				twoAB := 2 * a * b
 
@@ -111,10 +107,9 @@ func main() {
 				}
 				n++
 			}
-
 			c.Img.Set(x, y, blue_plt[n%len(blue_plt)])
 
-			// stayed bounded
+			// stays bounded
 			if n == *iterations {
 				c.Img.Set(x, y, image.White)
 			}
