@@ -12,36 +12,88 @@ import (
 var (
 	bg         = flag.String("bg", "#fff", "hex value for background color")
 	res        = flag.Int("res", 4096, "The width and height of the canvas.")
-	min        = flag.Float64("min", -1.2, "The minimum value on the x and y axis.")
-	max        = flag.Float64("max", 1.2, "The maximum value on the x and y axis.")
-	out        = flag.String("out", "image.png", "output path for generated file.")
+	xmin        = flag.Float64("xmin", -1.2, "The minimum value on the x axis.")
+	xmax        = flag.Float64("xmax", 1.2, "The maximum value on the x axis.")
+	ymin        = flag.Float64("ymin", -1.2, "The minimum value on the y axis.")
+	ymax        = flag.Float64("ymax", 1.2, "The maximum value on the y axis.")
+  out        = flag.String("out", "image.png", "output path for generated file.")
 	cReal      = flag.Float64("real", 0, "c's real component.")
 	palette    = flag.String("palette", "blue", "color palette from your mandelbrot.json config")
 	cImaginary = flag.Float64("i", 0, "c's imaginary component.")
 	iterations = flag.Int("iterations", 100, "how many operations until considering a point bounded.")
 )
 
-func main() {
-	flag.Parse()
-  bgColor, err := canvas.ParseHexColorFast(*bg)
-  if err != nil {
-    log.Fatal(err)
-  }
-	// Generate a new canvas
-	c := canvas.New(*res, *palette, bgColor)
-	// Instantiate our range maps to normalize x,y values to be between the min and max values specified at runtime.
-	rm := newRangeMap(rangeBounds{0, float64(c.Width)}, rangeBounds{*min, *max})
+type rangemap func(float64) (float64, bool)
 
+func mandelbrot(c canvas.Canvas) {
+	// Instantiate our range maps to normalize x,y values to be between the min and max values specified at runtime.
+	rmX := newRangeMap(rangeBounds{0, float64(c.Width)}, rangeBounds{*xmin, *xmax})
+	rmY := newRangeMap(rangeBounds{0, float64(c.Height)}, rangeBounds{*ymin, *ymax})
 	// for every pixel
 	for x := 0; x < c.Width; x++ {
 		for y := 0; y < c.Height; y++ {
 			// get the normalized x
-			a, ok := rm(float64(x))
+			a, ok := rmX(float64(x))
 			if !ok {
 				log.Fatal("Rangemap Error")
 			}
 			// get the normalized y
-			b, ok := rm(float64(y))
+			b, ok := rmY(float64(y))
+			if !ok {
+				log.Fatal("Rangemap Error")
+			}
+      ca := a
+      cb := b
+			// iteration counter
+			n := 0
+			for n < *iterations {
+				// Math stuff that I had to watch videos about and look up....
+				// This is where we apply the zeta function to each pixel recursively.
+				// The function will either converge to a value or blow up to infinity.
+				aSquared := a*a - b*b
+				twoAB := 2 * a * b
+
+				a = aSquared + ca
+				b = twoAB + cb
+
+				// Looks like we're heading to infinity
+				if math.Abs(aSquared+twoAB) > 16 {
+					break
+				}
+				n++
+			}
+			c.Img.Set(x, y, c.Palette[n%len(c.Palette)])
+
+			// stays bounded
+			if n == *iterations {
+				c.Img.Set(x, y, c.Bg)
+			}
+
+			// this calms down some of the color schemes.
+			// Can be removed or tweaked based on your preference.
+			if n <= 5 {
+				c.Img.Set(x, y, c.Bg)
+			}
+		}
+	}
+	c.Save(*out)
+}
+
+
+func julia(c canvas.Canvas) {
+	// Instantiate our range maps to normalize x,y values to be between the min and max values specified at runtime.
+	rmX := newRangeMap(rangeBounds{0, float64(c.Width)}, rangeBounds{*xmin, *xmax})
+	rmY := newRangeMap(rangeBounds{0, float64(c.Height)}, rangeBounds{*ymin, *ymax})
+	// for every pixel
+	for x := 0; x < c.Width; x++ {
+		for y := 0; y < c.Height; y++ {
+			// get the normalized x
+			a, ok := rmX(float64(x))
+			if !ok {
+				log.Fatal("Rangemap Error")
+			}
+			// get the normalized y
+			b, ok := rmY(float64(y))
 			if !ok {
 				log.Fatal("Rangemap Error")
 			}
@@ -77,8 +129,25 @@ func main() {
 			}
 		}
 	}
-
 	c.Save(*out)
+}
+
+func main() {
+	flag.Parse()
+  bgColor, err := canvas.ParseHexColorFast(*bg)
+  if err != nil {
+    log.Fatal(err)
+  }
+	// Generate a new canvas
+	c := canvas.New(*res, *palette, bgColor)
+
+  if *cReal != 0 || *cImaginary != 0 {
+    julia(*c)
+    return
+  }
+
+  mandelbrot(*c)
+  return
 }
 
 type rangeBounds struct {
