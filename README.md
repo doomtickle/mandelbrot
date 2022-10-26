@@ -62,4 +62,5 @@ set will be rendered instead of a julia set.**
 ### Example
 
 `./mandelbrot -real=0.285 -i=0.01 --out=blue_julia.png`
+
 `/mandelbrot -out=mandelbrot.png -bg=#333 -xmin=-2 -xmax=0.8 -ymin=-1.4 -ymax=1.4`
