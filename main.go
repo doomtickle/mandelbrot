@@ -24,7 +24,7 @@ var (
 	palette    = flag.String("p", "blue", "color palette from your mandelbrot.json config")
 	cImaginary = flag.Float64("im", 0, "c's imaginary component.")
 	iterations = flag.Int("iter", 100, "how many operations until considering a point bounded.")
-  threshold  = flag.Int("thresh", 16, "Number of iterations required to be assigned a color. The higher the number, the fewer zones will display color.")
+	threshold  = flag.Int("thresh", 16, "Number of iterations required to be assigned a color. The higher the number, the fewer zones will display color.")
 )
 
 type rangemap func(float64) (float64, bool)
@@ -61,7 +61,7 @@ func mandelbrot(c canvas.Canvas) {
 				b = twoAB + cb
 
 				// Looks like we're heading to infinity
-				if math.Abs(aSquared+twoAB) > 16 {
+				if math.Abs(aSquared+twoAB) > 2 {
 					break
 				}
 				n++
@@ -102,27 +102,24 @@ func julia(c canvas.Canvas) {
 			}
 			// iteration counter
 			n := 0
+			diverged := false
 			for n < *iterations {
 				aSquared := a*a - b*b
 				twoAB := 2 * a * b
 
 				a = aSquared + *cReal
 				b = twoAB + *cImaginary
-				if math.Abs(aSquared+twoAB) > 16 {
+				if math.Abs(aSquared+twoAB) > 8 {
+					diverged = true
 					break
 				}
 				n++
 			}
-			c.Img.Set(x, y, c.Palette[n%len(c.Palette)])
 
-			// stays bounded
-			if n == *iterations {
-				c.Img.Set(x, y, c.Bg)
-			}
-
-			// this calms down some of the color schemes.
-			// Can be removed or tweaked based on your preference.
-			if n <= *threshold {
+			if diverged && n >= *threshold {
+				c.Img.Set(x, y, c.Palette[n%len(c.Palette)])
+				// stays bounded
+			} else {
 				c.Img.Set(x, y, c.Bg)
 			}
 		}
@@ -153,7 +150,7 @@ func runJobs() {
 			*ymax = j.YMax
 			*cReal = j.Real
 			*cImaginary = j.Imaginary
-      *threshold = j.Threshold
+			*threshold = j.Threshold
 			bgColor, err := canvas.ParseHexColorFast(j.Bg)
 			if err != nil {
 				log.Fatal(err)

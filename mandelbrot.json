@@ -35,22 +35,28 @@
       [85, 214, 190, 255],
       [221, 221, 221, 255],
       [252, 100, 113, 255]
+    ],
+    "mono": [
+      [50, 50, 50, 255]
+    ],
+    "white": [
+      [255, 255, 255, 255]
     ]
   }, 
   "jobs": [
     {
-      "bg": "#333",
+      "bg": "#fff",
       "xmin": -2,
       "xmax": 2,
       "ymin": -2,
       "ymax": 2,
       "res": 4096,
       "iterations": 100,
-      "palette": "psychedelic",
+      "palette": "spring",
       "out": "images/job1.png",
-      "real": -0.8,
-      "im": 0.156,
-      "threshold": 5
+      "real": 0.285,
+      "im": 0,
+      "threshold": 0 
     },
     {
       "bg": "#fff",
@@ -64,7 +70,7 @@
       "out": "images/job2.png",
       "real": 0.285,
       "im": 0.01, 
-      "threshold": 5
+      "threshold": 16 
     }
   ]
 }
