@@ -100,16 +100,11 @@ func julia(c canvas.Canvas) {
 			// iteration counter
 			n := 0
 			for n < *iterations {
-				// Math stuff that I had to watch videos about and look up....
-				// This is where we apply the zeta function to each pixel recursively.
-				// The function will either converge to a value or blow up to infinity.
 				aSquared := a*a - b*b
 				twoAB := 2 * a * b
 
 				a = aSquared + *cReal
 				b = twoAB + *cImaginary
-
-				// Looks like we're heading to infinity
 				if math.Abs(aSquared+twoAB) > 16 {
 					break
 				}
@@ -124,9 +119,9 @@ func julia(c canvas.Canvas) {
 
 			// this calms down some of the color schemes.
 			// Can be removed or tweaked based on your preference.
-			if n <= 16 {
-				c.Img.Set(x, y, c.Bg)
-			}
+			// if n <= 16 {
+			// 	c.Img.Set(x, y, c.Bg)
+			// }
 		}
 	}
 	c.Save(*out)
