@@ -39,7 +39,7 @@
   }, 
   "jobs": [
     {
-      "bg": "#000",
+      "bg": "#333",
       "xmin": -2,
       "xmax": 2,
       "ymin": -2,
@@ -47,9 +47,10 @@
       "res": 4096,
       "iterations": 100,
       "palette": "psychedelic",
-      "out": "job1.png",
+      "out": "images/job1.png",
       "real": -0.8,
-      "im": 0.156
+      "im": 0.156,
+      "threshold": 5
     },
     {
       "bg": "#fff",
@@ -60,9 +61,10 @@
       "res": 4096,
       "iterations": 100,
       "palette": "dark",
-      "out": "job2.png",
+      "out": "images/job2.png",
       "real": 0.285,
-      "im": 0.01  
+      "im": 0.01, 
+      "threshold": 5
     }
   ]
 }

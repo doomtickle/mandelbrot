@@ -8,6 +8,7 @@ import (
 	"image/png"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 type Canvas struct {
@@ -29,6 +30,7 @@ type Job struct {
 	Iterations int     `json:"iterations"`
 	Real       float64 `json:"real"`
 	Imaginary  float64 `json:"im"`
+	Threshold  int     `json:"threshold"`
 }
 
 type JsonConfig struct {
@@ -49,7 +51,11 @@ func New(res int, plt string, bg color.Color) *Canvas {
 }
 
 func (c *Canvas) Save(s string) {
-	f, _ := os.Create(s)
+	fp, err := filepath.Abs(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	f, _ := os.Create(fp)
 	png.Encode(f, c.Img)
 }
 

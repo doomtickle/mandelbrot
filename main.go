@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 	"log"
 	"math"
 	"os"
@@ -25,6 +24,7 @@ var (
 	palette    = flag.String("p", "blue", "color palette from your mandelbrot.json config")
 	cImaginary = flag.Float64("im", 0, "c's imaginary component.")
 	iterations = flag.Int("iter", 100, "how many operations until considering a point bounded.")
+  threshold  = flag.Int("thresh", 16, "Number of iterations required to be assigned a color. The higher the number, the fewer zones will display color.")
 )
 
 type rangemap func(float64) (float64, bool)
@@ -75,7 +75,7 @@ func mandelbrot(c canvas.Canvas) {
 
 			// this calms down some of the color schemes.
 			// Can be removed or tweaked based on your preference.
-			if n <= 5 {
+			if n <= *threshold {
 				c.Img.Set(x, y, c.Bg)
 			}
 		}
@@ -122,7 +122,7 @@ func julia(c canvas.Canvas) {
 
 			// this calms down some of the color schemes.
 			// Can be removed or tweaked based on your preference.
-			if n <= 16 {
+			if n <= *threshold {
 				c.Img.Set(x, y, c.Bg)
 			}
 		}
@@ -153,14 +153,13 @@ func runJobs() {
 			*ymax = j.YMax
 			*cReal = j.Real
 			*cImaginary = j.Imaginary
+      *threshold = j.Threshold
 			bgColor, err := canvas.ParseHexColorFast(j.Bg)
 			if err != nil {
 				log.Fatal(err)
 			}
 			// Generate a new canvas
 			c := canvas.New(j.Res, j.Palette, bgColor)
-
-			fmt.Printf("%#v", j)
 
 			if j.Real != 0 || j.Imaginary != 0 {
 				julia(*c)

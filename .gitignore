@@ -2,4 +2,5 @@
 tmp/*
 *.png
 mandelbrot
+./images/*
 
