@@ -36,13 +36,9 @@
       [221, 221, 221, 255],
       [252, 100, 113, 255]
     ],
-    "mono": [
-      [50, 50, 50, 255]
-    ],
-    "white": [
-      [255, 255, 255, 255]
-    ]
-  }, 
+    "mono": [[50, 50, 50, 255]],
+    "white": [[255, 255, 255, 255]]
+  },
   "jobs": [
     {
       "bg": "#fff",
@@ -53,10 +49,10 @@
       "res": 4096,
       "iterations": 100,
       "palette": "spring",
-      "out": "images/job1.png",
+      "out": "images/egg.png",
       "real": 0.285,
       "im": 0,
-      "threshold": 0 
+      "threshold": 0
     },
     {
       "bg": "#fff",
@@ -66,11 +62,53 @@
       "ymax": 1.2,
       "res": 4096,
       "iterations": 100,
-      "palette": "dark",
-      "out": "images/job2.png",
+      "palette": "blue",
+      "out": "images/pices.png",
       "real": 0.285,
-      "im": 0.01, 
-      "threshold": 16 
+      "im": 0.01,
+      "threshold": 16
+    },
+    {
+      "bg": "#000",
+      "xmin": -1.8,
+      "xmax": 0.6,
+      "ymin": -1.2,
+      "ymax": 1.2,
+      "res": 4096,
+      "iterations": 100,
+      "palette": "white",
+      "out": "images/mandelbrot.png",
+      "real": 0,
+      "im": 0,
+      "threshold": 5
+    },
+    {
+      "bg": "#fff",
+      "xmin": -1,
+      "xmax": -0.5,
+      "ymin": -1,
+      "ymax": -0.5,
+      "res": 4096,
+      "iterations": 100,
+      "palette": "dark",
+      "out": "images/scar.png",
+      "real": 0,
+      "im": -0.8,
+      "threshold": 5
+    },
+    {
+      "bg": "#ccc",
+      "xmin": -1.2,
+      "xmax": 1.2,
+      "ymin": -1.2,
+      "ymax": 1.2,
+      "res": 4096,
+      "iterations": 100,
+      "palette": "psychedelic",
+      "out": "images/city.png",
+      "real": -0.70176,
+      "im": -0.3842,
+      "threshold": 8
     }
   ]
 }

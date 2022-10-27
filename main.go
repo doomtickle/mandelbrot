@@ -49,6 +49,7 @@ func mandelbrot(c canvas.Canvas) {
 			ca := a
 			cb := b
 			// iteration counter
+      diverged := false
 			n := 0
 			for n < *iterations {
 				// Math stuff that I had to watch videos about and look up....
@@ -61,21 +62,16 @@ func mandelbrot(c canvas.Canvas) {
 				b = twoAB + cb
 
 				// Looks like we're heading to infinity
-				if math.Abs(aSquared+twoAB) > 2 {
+				if math.Abs(aSquared+twoAB) > 8 {
+          diverged = true
 					break
 				}
 				n++
 			}
-			c.Img.Set(x, y, c.Palette[n%len(c.Palette)])
-
-			// stays bounded
-			if n == *iterations {
-				c.Img.Set(x, y, c.Bg)
-			}
-
-			// this calms down some of the color schemes.
-			// Can be removed or tweaked based on your preference.
-			if n <= *threshold {
+			if diverged && n >= *threshold {
+				c.Img.Set(x, y, c.Palette[n%len(c.Palette)])
+				// stays bounded
+			} else {
 				c.Img.Set(x, y, c.Bg)
 			}
 		}
