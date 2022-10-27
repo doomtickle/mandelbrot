@@ -11,3 +11,7 @@ After cloning the repo, `cd` into the project directory and build the executable
 ## Usage
 
 COMING SOON®
+
+Up and running for mac users:
+
+`brew install go && git clone git@github.com:doomtickle/mandelbrot.git && cd mandelbrot && mkdir images && go build . && ./mandelbrot --jobs`
